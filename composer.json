@@ -1,0 +1,10 @@
+{
+    "require": {
+        "mailchimp/mailchimp": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dev7EmailSync\\": "src/"
+        }
+    }
+}
