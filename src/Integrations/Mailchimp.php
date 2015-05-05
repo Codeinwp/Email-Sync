@@ -118,7 +118,13 @@ class Mailchimp implements Integration {
 
 	public function settings_section_info()
 	{
-
+		echo '<p>'. sprintf(
+				'%s <a href="%s" target="_blank">%s</a> %s',
+				__( 'Enter your', 'dev7-email-sync' ),
+				'http://mailchimp.com',
+				__( 'Mailchimp', 'dev7-email-sync' ),
+				__( 'settings below to sync with a Mailchimp list.', 'dev7-email-sync' )
+			) .'</p>';
 	}
 
 	public function setting_api_key()
@@ -126,6 +132,7 @@ class Mailchimp implements Integration {
 		$options = get_option( 'dev7_email_sync_settings' );
 		$value = isset( $options['api_key'] ) ? esc_attr( $options['api_key'] ) : '';
 		echo '<input type="text" id="api_key" name="dev7_email_sync_settings[api_key]" value="'. $value .'" />';
+		echo '<p class="description">'. __( 'Can be found in Mailchimp: Account &gt; Extras &gt; API keys', 'dev7-email-sync' ) .'</p>';
 	}
 
 	public function setting_list_id()
@@ -133,10 +140,14 @@ class Mailchimp implements Integration {
 		$options = get_option( 'dev7_email_sync_settings' );
 		$value = isset( $options['list_id'] ) ? esc_attr( $options['list_id'] ) : '';
 		echo '<input type="text" id="list_id" name="dev7_email_sync_settings[list_id]" value="'. $value .'" />';
+		echo '<p class="description">'. __( 'Can be found in Mailchimp: List Settings &gt; List name and Campaign defaults', 'dev7-email-sync' ) .'</p>';
 	}
 
 	public function sanitize( $input )
 	{
+		$input['api_key'] = sanitize_text_field( $input['api_key'] );
+		$input['list_id'] = sanitize_text_field( $input['list_id'] );
+
 		return $input;
 	}
 

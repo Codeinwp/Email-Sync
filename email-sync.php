@@ -1,14 +1,16 @@
 <?php
 
 /**
- * Plugin Name:       Email Sync
- * Plugin URI:        http://dev7studios.com/email-sync
- * Description:       Sync your WordPress user's email addresses with your favorite newsletter software (e.g. MailChimp)
- * Version:           1.0.0
- * Author:            Dev7studios
- * Author URI:        http://dev7studios.com
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Plugin Name: Email Sync
+ * Plugin URI:  http://dev7studios.com/email-sync
+ * Description: Sync your WordPress email addresses with your favorite email marketing software
+ * Version:     1.0.0
+ * Author:      Dev7studios
+ * Author URI:  http://dev7studios.com
+ * License:     GPL-2.0+
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain: dev7-email-sync
+ * Domain Path: /languages
  */
 
 // If this file is called directly, abort.
@@ -23,6 +25,8 @@ class Dev7EmailSync {
 	public function __construct()
 	{
 		require 'vendor/autoload.php';
+
+		load_plugin_textdomain( 'dev7-email-sync', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -101,7 +105,7 @@ class Dev7EmailSync {
 				<?php
 				settings_fields( 'dev7es_option_group' );
 				do_settings_sections( 'dev7-email-sync' );
-				submit_button();
+				submit_button( $this->integration ? __( 'Save Changes', 'dev7-email-sync' ) : __( 'Save & Continue', 'dev7-email-sync' ) );
 				?>
 			</form>
 		</div>
@@ -110,8 +114,9 @@ class Dev7EmailSync {
 
 	public function sanitize( $input )
 	{
-		if ( !$this->integration ) return $input;
+		$input['integration'] = sanitize_text_field( $input['integration'] );
 
+		if ( !$this->integration ) return $input;
 		return $this->integration->sanitize( $input );
 	}
 
