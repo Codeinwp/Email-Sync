@@ -33,6 +33,8 @@ class Dev7EmailSync {
 		add_action( 'user_register', array( $this, 'subscribe_user' ) );
 		add_action( 'profile_update', array( $this, 'update_subscriber' ) );
 		add_action( 'delete_user', array( $this, 'unsubscribe_user' ) );
+		add_action( 'personal_options', array( $this, 'personal_options' ) );
+		add_action( 'personal_options_update', array( $this, 'personal_options_update' ) );
 	}
 
 	public function admin_init()
@@ -133,6 +135,47 @@ class Dev7EmailSync {
 			<option value="">- '. __( 'Select Email Provider', 'dev7-email-sync' ) .' -</option>
 			<option value="mailchimp"'. ($options['integration'] == 'mailchimp' ? ' selected="selected"' : '') .'>'. __( 'Mailchimp', 'dev7-email-sync' ) .'</option>
 		</select>';
+	}
+
+	public function personal_options( $user )
+	{
+		if ( !$this->integration ) return;
+
+		$subscribed = $this->integration->is_subscribed( $user->ID );
+		?>
+		<tr class="dev7-email-sync">
+			<th scope="row"><?php _e( 'Subscribe', 'dev7-email-sync' ); ?></th>
+			<td>
+				<fieldset>
+					<legend class="screen-reader-text"><span><?php _e( 'Subscribe', 'dev7-email-sync' ); ?></span></legend>
+					<label for="dev7_email_sync_subscribe">
+						<input type="hidden" name="dev7_email_sync_subscribe" value="0" />
+						<input name="dev7_email_sync_subscribe" type="checkbox" id="dev7_email_sync_subscribe" value="1"<?php checked( $subscribed ); ?> />
+						<?php echo apply_filters( 'dev7es_profile_subscribe_label', __( 'Subscribe to receive marketing emails and updates', 'dev7-email-sync' ) ); ?>
+						<p class="description"><?php _e( 'When subscribing this will update automatically once your email address is confirmed', 'dev7-email-sync' ); ?></p>
+					</label><br />
+				</fieldset>
+			</td>
+		</tr>
+		<?php
+	}
+
+	public function personal_options_update( $user_id )
+	{
+		if ( !$this->integration ) return;
+		if ( !wp_verify_nonce( $_REQUEST['_wpnonce'], 'update-user_' . $user_id ) ) return;
+
+		$subscribe = isset( $_POST['dev7_email_sync_subscribe'] ) ? absint( $_POST['dev7_email_sync_subscribe'] ) : null;
+		if ( $subscribe !== null ) {
+			$is_subscribed = $this->integration->is_subscribed( $user_id );
+
+			if ( $subscribe && !$is_subscribed ) {
+				$this->integration->subscribe( $user_id );
+			}
+			if ( !$subscribe && $is_subscribed ) {
+				$this->integration->unsubscribe( $user_id );
+			}
+		}
 	}
 
 }
