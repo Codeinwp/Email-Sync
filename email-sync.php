@@ -35,6 +35,8 @@ class Dev7EmailSync {
 		add_action( 'delete_user', array( $this, 'unsubscribe_user' ) );
 		add_action( 'personal_options', array( $this, 'personal_options' ) );
 		add_action( 'personal_options_update', array( $this, 'personal_options_update' ) );
+		add_filter( 'manage_users_columns', array( $this, 'manage_users_columns' ) );
+		add_action( 'manage_users_custom_column',  array( $this, 'manage_users_custom_column' ), 10, 3 );
 	}
 
 	public function admin_init()
@@ -82,6 +84,8 @@ class Dev7EmailSync {
 		if ( !$this->integration->is_subscribed( $user_id ) ) {
 			$this->integration->subscribe( $user_id );
 		}
+
+		delete_transient( 'dev7es_'. $user_id .'_subscribed' );
 	}
 
 	public function update_subscriber( $user_id )
@@ -89,6 +93,8 @@ class Dev7EmailSync {
 		if ( !$this->integration ) return;
 
 		$this->integration->update_subscription( $user_id );
+
+		delete_transient( 'dev7es_'. $user_id .'_subscribed' );
 	}
 
 	public function unsubscribe_user( $user_id )
@@ -96,6 +102,8 @@ class Dev7EmailSync {
 		if ( !$this->integration ) return;
 
 		$this->integration->unsubscribe( $user_id );
+
+		delete_transient( 'dev7es_'. $user_id .'_subscribed' );
 	}
 
 	public function settings_page()
@@ -175,7 +183,37 @@ class Dev7EmailSync {
 			if ( !$subscribe && $is_subscribed ) {
 				$this->integration->unsubscribe( $user_id );
 			}
+
+			delete_transient( 'dev7es_'. $user_id .'_subscribed' );
 		}
+	}
+
+	public function manage_users_columns( $columns )
+	{
+		if ( !$this->integration ) return $columns;
+
+		$columns['dev7es_is_subscribed'] = __( 'Subscribed', 'dev7-email-sync' );
+		return $columns;
+	}
+
+	public function manage_users_custom_column( $value, $column_name, $user_id )
+	{
+		if ( !$this->integration ) return $value;
+
+		if ( $column_name == 'dev7es_is_subscribed' ) {
+			if ( ( $value = get_transient( 'dev7es_'. $user_id .'_subscribed' ) ) === false ) {
+				$value = $this->integration->is_subscribed( $user_id ) ? 1 : 0;
+				set_transient( 'dev7es_'. $user_id .'_subscribed', $value, 4 * WEEK_IN_SECONDS );
+			}
+
+			if ( $value ) {
+				$value = '&#10003;';
+			} else {
+				$value = '-';
+			}
+		}
+
+		return $value;
 	}
 
 }
