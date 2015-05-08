@@ -7,7 +7,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Sync your WordPress email addresses with your favorite email marketing software
+Sync your WordPress email addresses with your favorite email marketing software.
 
 == Description ==
 
@@ -35,6 +35,7 @@ Current Providers:
 == Screenshots ==
 
 1. Email Sync settings
+2. Option in profile settings
 
 == Changelog ==
 
