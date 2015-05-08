@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Sync v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2015-05-06 14:47-0000\n"
+"POT-Creation-Date: 2015-05-08 12:16-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Your Name <you@example.com>\n"
 "Language-Team: Dev7studios <gilbert@dev7studios.com>\n"
@@ -23,73 +23,73 @@ msgstr ""
 "X-Generator: Poedit 1.7.6\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: email-sync.php:48
+#: email-sync.php:49
 msgid "General Settings"
 msgstr ""
 
-#: email-sync.php:55 email-sync.php:143
+#: email-sync.php:56 email-sync.php:144
 msgid "Select Email Provider"
 msgstr ""
 
-#: email-sync.php:72 email-sync.php:113
+#: email-sync.php:73 email-sync.php:114
 msgid "Email Sync Settings"
 msgstr ""
 
-#: email-sync.php:73
+#: email-sync.php:74
 msgid "Email Sync"
 msgstr ""
 
-#: email-sync.php:118
+#: email-sync.php:119
 msgid "Save Changes"
 msgstr ""
 
-#: email-sync.php:118
+#: email-sync.php:119
 msgid "Save & Continue"
 msgstr ""
 
-#: email-sync.php:144 src/Integrations/Mailchimp.php:125
+#: email-sync.php:145 src/Integrations/Mailchimp.php:129
 msgid "Mailchimp"
 msgstr ""
 
-#: email-sync.php:155 email-sync.php:158
+#: email-sync.php:159 email-sync.php:162
 msgid "Subscribe"
 msgstr ""
 
-#: email-sync.php:162
+#: email-sync.php:166
 msgid "Subscribe to receive marketing emails and updates"
 msgstr ""
 
-#: email-sync.php:163
+#: email-sync.php:167
 msgid ""
 "When subscribing this will update automatically once your email address is "
 "confirmed"
 msgstr ""
 
-#: email-sync.php:195
+#: email-sync.php:199
 msgid "Subscribed"
 msgstr ""
 
-#: src/Integrations/Mailchimp.php:97
+#: src/Integrations/Mailchimp.php:101
 msgid "Mailchimp Settings"
 msgstr ""
 
-#: src/Integrations/Mailchimp.php:104
+#: src/Integrations/Mailchimp.php:108
 msgid "API Key"
 msgstr ""
 
-#: src/Integrations/Mailchimp.php:123
+#: src/Integrations/Mailchimp.php:127
 msgid "Enter your"
 msgstr ""
 
-#: src/Integrations/Mailchimp.php:126
+#: src/Integrations/Mailchimp.php:130
 msgid "settings below to sync with a Mailchimp list."
 msgstr ""
 
-#: src/Integrations/Mailchimp.php:135
+#: src/Integrations/Mailchimp.php:139
 msgid "Can be found in Mailchimp: Account &gt; Extras &gt; API keys"
 msgstr ""
 
-#: src/Integrations/Mailchimp.php:143
+#: src/Integrations/Mailchimp.php:147
 msgid ""
 "Can be found in Mailchimp: List Settings &gt; List name and Campaign defaults"
 msgstr ""
