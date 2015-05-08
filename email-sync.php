@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Email Sync
- * Plugin URI:  http://dev7studios.com/email-sync
+ * Plugin URI:  https://github.com/Dev7studios/Email-Sync
  * Description: Sync your WordPress email addresses with your favorite email marketing software
  * Version:     1.0.0
  * Author:      Dev7studios

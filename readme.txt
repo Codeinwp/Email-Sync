@@ -2,7 +2,7 @@
 Contributors: dev7studios, gilbitron
 Tags: email, sync, mailchimp
 Requires at least: 4.0
-Tested up to: 4.2.1
+Tested up to: 4.2.2
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -38,5 +38,5 @@ Current Providers:
 
 == Changelog ==
 
-= 1.0.0 - 2015-05-06 =
+= 1.0.0 - 2015-05-08 =
 * Initial release
