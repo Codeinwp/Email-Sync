@@ -34,7 +34,8 @@ class Dev7EmailSync {
 		add_action( 'profile_update', array( $this, 'update_subscriber' ) );
 		add_action( 'delete_user', array( $this, 'unsubscribe_user' ) );
 		add_action( 'personal_options', array( $this, 'personal_options' ) );
-		add_action( 'personal_options_update', array( $this, 'personal_options_update' ) );
+		add_action( 'personal_options_update', array( $this, 'edit_user_profile_update' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'edit_user_profile_update' ) );
 		add_filter( 'manage_users_columns', array( $this, 'manage_users_columns' ) );
 		add_action( 'manage_users_custom_column',  array( $this, 'manage_users_custom_column' ), 10, 3 );
 	}
@@ -168,7 +169,7 @@ class Dev7EmailSync {
 		<?php
 	}
 
-	public function personal_options_update( $user_id )
+	public function edit_user_profile_update( $user_id )
 	{
 		if ( !$this->integration ) return;
 		if ( !wp_verify_nonce( $_REQUEST['_wpnonce'], 'update-user_' . $user_id ) ) return;
