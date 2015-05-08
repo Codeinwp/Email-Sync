@@ -5,7 +5,7 @@ use Dev7EmailSync\Integration;
 class Mailchimp implements Integration {
 
 	protected $mc;
-	protected $metaKey = 'dev7es_mailchimp';
+	protected $metaKey = 'dev7es_mailchimp_id';
 	protected $options;
 	protected $apiKey;
 	protected $listId;
@@ -23,16 +23,13 @@ class Mailchimp implements Integration {
 
 	public function is_subscribed( $user_id )
 	{
-		$user = get_userdata( $user_id );
-		$email = $user->user_email;
-
-		$subscriber_uid = get_user_meta( $user_id, $this->metaKey, true );
-		if ( !$subscriber_uid ) {
-			return false;
-		}
-
 		try {
-			$resp = $this->mc->lists->memberInfo( $this->listId, array(array( 'leid' => $subscriber_uid )) );
+			$resp = $this->mc->lists->memberInfo( $this->listId, array( $this->email_or_leid( $user_id ) ) );
+
+			if ( isset( $resp['data'][0]['leid'] ) && $resp['data'][0]['leid'] ) {
+				update_user_meta( $user_id, $this->metaKey, $resp['data'][0]['leid'] );
+			}
+
 			if ( isset( $resp['data'][0]['status'] ) && $resp['data'][0]['status'] == 'subscribed' ) {
 				return true;
 			}
@@ -43,11 +40,8 @@ class Mailchimp implements Integration {
 
 	public function subscribe( $user_id )
 	{
-		$user = get_userdata( $user_id );
-		$email = $user->user_email;
-
 		try {
-			$resp = $this->mc->lists->subscribe( $this->listId, array( 'email' => $email ) );
+			$resp = $this->mc->lists->subscribe( $this->listId, $this->email_or_leid( $user_id ) );
 			if ( isset( $resp['leid'] ) && $resp['leid'] ) {
 				update_user_meta( $user_id, $this->metaKey, $resp['leid'] );
 				return true;
@@ -59,16 +53,15 @@ class Mailchimp implements Integration {
 
 	public function update_subscription( $user_id )
 	{
-		$user = get_userdata( $user_id );
-		$email = $user->user_email;
-
 		if ( !$this->is_subscribed( $user_id ) ) {
 			return $this->subscribe( $user_id );
 		}
 
+		$user = get_userdata( $user_id );
+		$email = $user->user_email;
+
 		try {
-			$subscriber_uid = get_user_meta( $user_id, $this->metaKey, true );
-			$resp = $this->mc->lists->updateMember( $this->listId, array( 'leid' => $subscriber_uid ), array(
+			$resp = $this->mc->lists->updateMember( $this->listId, $this->email_or_leid( $user_id ), array(
 				'EMAIL' => $email
 			) );
 		} catch ( \Exception $e ) {}
@@ -78,11 +71,8 @@ class Mailchimp implements Integration {
 
 	public function unsubscribe( $user_id )
 	{
-		$user = get_userdata( $user_id );
-		$email = $user->user_email;
-
 		try {
-			$resp = $this->mc->lists->unsubscribe( $this->listId, array( 'email' => $email ) );
+			$resp = $this->mc->lists->unsubscribe( $this->listId, $this->email_or_leid( $user_id ) );
 			if ( isset( $resp['complete'] ) && $resp['complete'] ) {
 				delete_user_meta( $user_id, $this->metaKey );
 				return true;
@@ -90,6 +80,18 @@ class Mailchimp implements Integration {
 		} catch ( \Exception $e ) {}
 
 		return false;
+	}
+
+	protected function email_or_leid( $user_id )
+	{
+		$subscriber_uid = get_user_meta( $user_id, $this->metaKey, true );
+
+		if ( !$subscriber_uid ) {
+			$user = get_userdata( $user_id );
+			return array( 'email' => $user->user_email );
+		}
+
+		return array( 'leid' => $subscriber_uid );
 	}
 
 	public function settings_init()
