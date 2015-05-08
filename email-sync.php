@@ -150,6 +150,9 @@ class Dev7EmailSync {
 	{
 		if ( !$this->integration ) return;
 
+		// Clear cache when visiting profile page
+		delete_transient( 'dev7es_'. $user->ID .'_subscribed' );
+
 		$subscribed = $this->integration->is_subscribed( $user->ID );
 		?>
 		<tr class="dev7-email-sync">
