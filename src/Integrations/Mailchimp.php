@@ -4,15 +4,17 @@ use Dev7EmailSync\Integration;
 
 class Mailchimp implements Integration {
 
-	private $mc;
-	private $metaKey = 'd7es_mailchimp';
+	protected $mc;
+	protected $metaKey = 'dev7es_mailchimp';
+	protected $options;
 	protected $apiKey;
 	protected $listId;
 
 	public function __construct( $options )
 	{
-		$this->apiKey = isset( $options['api_key'] ) ? $options['api_key'] : '';
-		$this->listId = isset( $options['list_id'] ) ? $options['list_id'] : '';
+		$this->options = $options;
+		$this->apiKey = isset( $options['mailchimp_api_key'] ) ? $options['mailchimp_api_key'] : '';
+		$this->listId = isset( $options['mailchimp_list_id'] ) ? $options['mailchimp_list_id'] : '';
 
 		try {
 			$this->mc = new \Mailchimp( $this->apiKey );
@@ -100,7 +102,7 @@ class Mailchimp implements Integration {
 		);
 
 		add_settings_field(
-			'api_key',
+			'mailchimp_api_key',
 			__( 'API Key', 'dev7-email-sync' ),
 			array( $this, 'setting_api_key' ),
 			'dev7-email-sync',
@@ -108,7 +110,7 @@ class Mailchimp implements Integration {
 		);
 
 		add_settings_field(
-			'list_id',
+			'mailchimp_list_id',
 			'List ID',
 			array( $this, 'setting_list_id' ),
 			'dev7-email-sync',
@@ -130,23 +132,23 @@ class Mailchimp implements Integration {
 	public function setting_api_key()
 	{
 		$options = get_option( 'dev7_email_sync_settings' );
-		$value = isset( $options['api_key'] ) ? esc_attr( $options['api_key'] ) : '';
-		echo '<input type="text" id="api_key" name="dev7_email_sync_settings[api_key]" value="'. $value .'" />';
+		$value = isset( $options['mailchimp_api_key'] ) ? esc_attr( $options['mailchimp_api_key'] ) : '';
+		echo '<input type="text" id="mailchimp_api_key" name="dev7_email_sync_settings[mailchimp_api_key]" value="'. $value .'" />';
 		echo '<p class="description">'. __( 'Can be found in Mailchimp: Account &gt; Extras &gt; API keys', 'dev7-email-sync' ) .'</p>';
 	}
 
 	public function setting_list_id()
 	{
 		$options = get_option( 'dev7_email_sync_settings' );
-		$value = isset( $options['list_id'] ) ? esc_attr( $options['list_id'] ) : '';
-		echo '<input type="text" id="list_id" name="dev7_email_sync_settings[list_id]" value="'. $value .'" />';
+		$value = isset( $options['mailchimp_list_id'] ) ? esc_attr( $options['mailchimp_list_id'] ) : '';
+		echo '<input type="text" id="mailchimp_list_id" name="dev7_email_sync_settings[mailchimp_list_id]" value="'. $value .'" />';
 		echo '<p class="description">'. __( 'Can be found in Mailchimp: List Settings &gt; List name and Campaign defaults', 'dev7-email-sync' ) .'</p>';
 	}
 
 	public function sanitize( $input )
 	{
-		$input['api_key'] = sanitize_text_field( $input['api_key'] );
-		$input['list_id'] = sanitize_text_field( $input['list_id'] );
+		$input['mailchimp_api_key'] = sanitize_text_field( $input['mailchimp_api_key'] );
+		$input['mailchimp_list_id'] = sanitize_text_field( $input['mailchimp_list_id'] );
 
 		return $input;
 	}
